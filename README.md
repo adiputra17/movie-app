@@ -1,8 +1,8 @@
 # movie-app
 <html>
-<head><title></title></head>
+<head></head>
 <body>
-  <p style="font-color: #ff00ddff"><b>Movie-App</b></p>
-  <p>Aplikasi untuk final project Indonesia Android Kejar - Intermediet</p>
+  <p style="color: #fff"><b>Movie-App</b></p>
+  <p><font color="#fff">Aplikasi untuk final project Indonesia Android Kejar - Intermediet</font></p>
 </body>
 </html>
