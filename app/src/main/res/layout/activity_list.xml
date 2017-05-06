@@ -10,21 +10,36 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
         android:background="@android:color/holo_blue_bright"
-        android:padding="@dimen/_10sdp"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="List Movie"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold"
-            android:textColor="#fff"/>
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/RelativeLayout01"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src=""/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="List Movie"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_centerVertical="true"
+                android:textColor="#fff"/>
+
+            <ImageButton
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:theme="@style/styleButton"
+                android:id="@+id/btnMenu"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_format_line_spacing_black_24dp"
+                />
+
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 

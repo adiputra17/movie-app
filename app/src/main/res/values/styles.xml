@@ -15,4 +15,10 @@
         <item name="android:colorBackground">@android:color/background_light</item>
     </style>
 
+    <style name="styleButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorControlHighlight">#9bdbf2</item>
+        <item name="colorButtonNormal">@android:color/holo_blue_bright</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 </resources>

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/sort"
-        android:title="Item" />
+        android:id="@+id/one"
+        android:title="Sort By Top Rate"
+        android:icon="@drawable/ic_subscriptions_black_24dp"/>
+    <item
+        android:id="@+id/two"
+        android:title="Sort By Popular"
+        android:icon="@drawable/ic_video_library_black_24dp"/>
+    <item
+        android:id="@+id/three"
+        android:title="Sort By Starred"
+        android:icon="@drawable/ic_star_black_24dp"/>
+
 </menu>
