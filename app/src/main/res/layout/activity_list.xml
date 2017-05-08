@@ -24,6 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="List Movie"
+                android:id="@+id/tvToolbar"
                 android:textSize="@dimen/_16sdp"
                 android:textStyle="bold"
                 android:layout_marginLeft="@dimen/_10sdp"
@@ -50,6 +51,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tvList"
+            android:padding="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 

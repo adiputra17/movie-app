@@ -40,10 +40,14 @@ public class ListActivity extends AppCompatActivity {
     public Context mContext;
     public View mAnchor;
     public static TextView tvList;
+    public static TextView tvToolbar;
+    public int flag;
 
     //JSON Parse
     //private  static final String ENDPOINT = "https://api.themoviedb.org/3/movie/550?api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
-    private static final String ENDPOINT = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
+    private static final String TOPRATE = "http://api.themoviedb.org/3/discover/movie?certification_country=US&certification=R&sort_by=vote_average.desc?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
+    private static final String POPULAR = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
+    private static final String STARRED = "";
     //private static final String ENDPOINT = "https://kylewbanks.com/rest/posts.json";
     private RequestQueue requestQueue;
     private Gson gson;
@@ -59,10 +63,11 @@ public class ListActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
-        fetchPosts();
+//        fetchPosts(1);
         //JSONParse --close--
 
         tvList = (TextView) findViewById(R.id.tvList);
+        tvToolbar = (TextView) findViewById(R.id.tvToolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -82,13 +87,19 @@ public class ListActivity extends AppCompatActivity {
                     public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.one:
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                                flag = 1;
+                                fetchPosts(flag);
+                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.two:
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                                flag = 2;
+                                fetchPosts(flag);
+                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
                                 return true;
                             case R.id.three:
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                                flag = 3;
+                                fetchPosts(flag);
+                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
                                 return true;
                             default:
                                 return false;
@@ -103,9 +114,24 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchPosts() {
-        StringRequest request = new StringRequest(Request.Method.GET, ENDPOINT, onPostsLoaded, onPostsError);
-        requestQueue.add(request);
+    private void fetchPosts(int flag) {
+        if(flag==1){
+            tvList.setText("");
+            tvToolbar.setText("Top Rate Movie");
+            StringRequest request = new StringRequest(Request.Method.GET, TOPRATE, onPostsLoaded, onPostsError);
+            requestQueue.add(request);
+        }else if(flag==2){
+            tvList.setText("");
+            tvToolbar.setText("Popular Movie");
+            StringRequest request = new StringRequest(Request.Method.GET, POPULAR, onPostsLoaded, onPostsError);
+            requestQueue.add(request);
+        }else{
+            tvList.setText("");
+            tvToolbar.setText("Starred Movie");
+            StringRequest request = new StringRequest(Request.Method.GET, STARRED, onPostsLoaded, onPostsError);
+            requestQueue.add(request);
+        }
+
     }
 
     private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
@@ -116,67 +142,22 @@ public class ListActivity extends AppCompatActivity {
         }
     };
 
-    //public class YourClassList extends ArrayList<Post> {}
-
-//    public static final <T> List<T> getList(String json) throws Exception {
-//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-//        Type typeOfList = new TypeToken<List<T>>(){}.getType();
-//        return gson.fromJson(json, typeOfList);
-//    }
-
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
 
         @Override
         public void onResponse(String response) {
             Log.i("PostActivity", response);
-            //tvList.append(response +"\n\n");
-
-            //Gson gson = new Gson();
-            //Type type = new TypeToken<ArrayList<Post.Container>>(){}.getType();
-            //String json = gson.toJson(response, type);
             Post posts = gson.fromJson(response, Post.class);
-            Log.i("PostActivity", String.valueOf(posts.page)+" "+posts.results);
-            tvList.append(posts.results+"\n\n");
-            //List<Post.Results> posts2 = Arrays.asList(gson.fromJson(response, Post.Results[].class));
-//            for (Post.Results post : posts2) {
-//                //Log.i("PostActivity", post.page);
-//                tvList.append(posts2.toString()+"\n\n");
-//            }
-//            Log.i("PostActivity", posts2.toString());
-//            tvList.append("\n\n "+ posts2.toString() +"\n\n");
-//            for (Post container : posts) {
-//                String innerJson = gson.toJson(container.getResult());
-//                List<Post.Result> posts2 = Arrays.asList(gson.fromJson(innerJson, Post.Result[].class));
-//                for (Post.Result post : posts2) {
-//                    Log.i("PostActivity", post.getId() + " : " + post.getTitle());
-//                    tvList.append(post.getId() + " : " + post.getTitle());
-//                }
-//            }
-//            for (Post post : posts) {
-//                //Log.i("PostActivity", post.page);
-//                tvList.append(post.getTitle()+"\n\n");
-//            }
-         //   tvList.append(posts.toString() +"\n\n");
+            Log.i("PostActivity", String.valueOf(posts.page)+" "+posts.results.toString());
+            String arr [] = posts.results.toString().split(",");
+            int i=1;
+            for(String t : arr){
+                tvList.append(i+" - "+t+"\n\n");
+                i++;
+            }
+            //String newstr = posts.results.toString().replaceAll("[,]", "");
+            //tvList.append(newstr +"\n\n");
 
-//            for (Post.Container container : posts) {
-//                String innerJson = gson.toJson(container.result);
-//                Post.Result[] posts2 = gson.fromJson(innerJson, Post.Result[].class);
-//                for (Post.Result post : posts2) {
-//                    Log.i("PostActivity", post.id + " : " + post.title);
-//                    tvList.append(post.id + " : " + post.title);
-//                }
-//            }
-//            List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
-//
-//            Log.i("PostActivity", posts.size() + " posts loaded.");
-//            for (Post post : posts) {
-//                Log.i("PostActivity", post.ID + ": " + post.title);
-//            }
-
-//                Type listType = new TypeToken<List<Post>>(){}.getType();
-//                List<Post> posts = gson.fromJson(response, listType);
-                //Post[] mcArray = gson.fromJson(response, Post[].class);
-                //List<Post> posts = Arrays.asList(mcArray);
                 //List<Post> posts = new ArrayList<>(Arrays.asList(mcArray));
                 //List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
                 //final Post posts = gson.fromJson(response, Post.class);
@@ -186,26 +167,6 @@ public class ListActivity extends AppCompatActivity {
 //                    posts = getList(response);
 //                } catch (Exception e) {
 //                    e.printStackTrace();
-//                }
-//                String jsonDuplicatedItems = request.getSession().getAttribute("jsonDuplicatedItems").toString();
-//                List<Map.Entry<Product, Integer>> posts = gson.fromJson(jsonDuplicatedItems, Post.class);
-
-            //Response posts = gson.fromJson(response, Response.class);
-            //String json = gson.toJson(response);
-//                List<Post> posts = gson.fromJson(response, new TypeToken<List<Post>>(){}.getType());
-
-//            Type listType = new TypeToken<List<String>>() {}.getType();
-//            List<String> target = new LinkedList<String>();
-//
-//            String json = gson.toJson(target, listType);
-//            List<Post> posts = gson.fromJson(json, listType);
-//
-//                Log.i("PostActivity", posts.size() + " posts loaded.");
-////                tvList.append(posts.toString()+"\n\n");
-////                int currentTotal = posts.results.size();
-//                for (Post post : posts) {
-//                    //Log.i("PostActivity", post.page);
-//                    tvList.append(post.title+"\n\n");
 //                }
 
         }
