@@ -6,62 +6,30 @@ package com.example.adiputra.movie_app;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Post extends ArrayList<Post.Container> {
-    public class Container {
-        @SerializedName("page")
-        private int page;
-        @SerializedName("result")
-        private Object result;
+public class Post{
 
-        public int getPage() {
-            return page;
-        }
+    public int page;
+    public List<Results> results;
+    //private Map<String, String> results;
 
-        public void setPage(int page) {
-            this.page = page;
-        }
-
-        public Object getResult() {
-            return result;
-        }
-
-        public void setResult(Object result) {
-            this.result = result;
-        }
-    }
-
-    public class Result {
-        @SerializedName("poster_path")
-        private String poster_path;
-        @SerializedName("id")
-        private int id;
-        @SerializedName("title")
+    public class Results{
         private String title;
-
-        public String getPoster_path() {
-            return poster_path;
-        }
-
-        public void setPoster_path(String poster_path) {
-            this.poster_path = poster_path;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
+        private String overview;
+        @Override
+        public String toString() {
+            return title+" "+overview;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(page);
+    }
+
+
 }

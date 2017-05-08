@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.simple.JSONObject;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e("ListActivity", error.toString());
-            tvList.append("Please Check Intenet Connection\n");
+            tvList.append("Please Check Internet Connection\n");
         }
     };
 
@@ -127,11 +129,34 @@ public class ListActivity extends AppCompatActivity {
         @Override
         public void onResponse(String response) {
             Log.i("PostActivity", response);
-            tvList.append(response +"\n\n");
+            //tvList.append(response +"\n\n");
 
-            Type type = new TypeToken<List<Post>>(){}.getType();
-            Post posts = gson.fromJson(response, type);
-            tvList.append(posts.toString() +"\n\n");
+            //Gson gson = new Gson();
+            //Type type = new TypeToken<ArrayList<Post.Container>>(){}.getType();
+            //String json = gson.toJson(response, type);
+            Post posts = gson.fromJson(response, Post.class);
+            Log.i("PostActivity", String.valueOf(posts.page)+" "+posts.results);
+            tvList.append(posts.results+"\n\n");
+            //List<Post.Results> posts2 = Arrays.asList(gson.fromJson(response, Post.Results[].class));
+//            for (Post.Results post : posts2) {
+//                //Log.i("PostActivity", post.page);
+//                tvList.append(posts2.toString()+"\n\n");
+//            }
+//            Log.i("PostActivity", posts2.toString());
+//            tvList.append("\n\n "+ posts2.toString() +"\n\n");
+//            for (Post container : posts) {
+//                String innerJson = gson.toJson(container.getResult());
+//                List<Post.Result> posts2 = Arrays.asList(gson.fromJson(innerJson, Post.Result[].class));
+//                for (Post.Result post : posts2) {
+//                    Log.i("PostActivity", post.getId() + " : " + post.getTitle());
+//                    tvList.append(post.getId() + " : " + post.getTitle());
+//                }
+//            }
+//            for (Post post : posts) {
+//                //Log.i("PostActivity", post.page);
+//                tvList.append(post.getTitle()+"\n\n");
+//            }
+         //   tvList.append(posts.toString() +"\n\n");
 
 //            for (Post.Container container : posts) {
 //                String innerJson = gson.toJson(container.result);
