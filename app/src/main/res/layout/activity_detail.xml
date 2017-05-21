@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.adiputra.movie_app.Activity.DetailActivity">
+
+    <ImageView
+        android:background="@color/colorAccent"
+        android:id="@+id/ivBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_160sdp" />
+
+    <ImageView
+        android:id="@+id/ivPlayButton"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:src="@drawable/ic_play_circle_filled_black_24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp" />
+
+    <ImageView
+        android:id="@+id/ivPosters"
+        android:layout_marginTop="@dimen/_145sdp"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:background="@color/cardview_dark_background"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_140sdp" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_toRightOf="@+id/ivPosters"
+        android:layout_below="@id/ivBackdrop"
+        android:text="title"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvRuntime"
+        android:text="durasi"
+        android:layout_toRightOf="@+id/ivPosters"
+        android:layout_below="@+id/tvTitle"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvRating"
+        android:text="rating"
+        android:layout_toRightOf="@+id/ivPosters"
+        android:layout_below="@+id/tvRuntime"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_toRightOf="@+id/ivPosters"
+        android:layout_below="@+id/tvRating"
+        android:text="BUY NOW $99"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvOverview"
+        android:padding="@dimen/_15sdp"
+        android:layout_below="@+id/ivPosters"
+        android:text="overview"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvId"
+        android:text="id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
