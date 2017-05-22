@@ -1,6 +1,7 @@
 package com.example.adiputra.movie_app.Activity;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.adiputra.movie_app.Adapter.MovieAdapter;
+import com.example.adiputra.movie_app.Database.DatabaseOperations;
 import com.example.adiputra.movie_app.Model.Post;
 import com.example.adiputra.movie_app.R;
 import com.google.gson.Gson;
@@ -38,6 +40,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
@@ -53,13 +57,9 @@ public class ListActivity extends AppCompatActivity {
     private List<Post.Results> modelListMovie = new ArrayList<>();
 
     //JSON Parse
-    //private  static final String ENDPOINT = "https://api.themoviedb.org/3/movie/550?api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
-//    private static final String TOPRATE = "http://api.themoviedb.org/3/discover/movie?certification_country=US&certification=R&sort_by=vote_average.desc?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
     private static final String TOPRATE = "http://api.themoviedb.org/3/movie/top_rated?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
-//    private static final String POPULAR = "http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
     private static final String POPULAR = "http://api.themoviedb.org/3/movie/popular?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
     private static final String STARRED = "";
-    //private static final String ENDPOINT = "https://kylewbanks.com/rest/posts.json";
     private RequestQueue requestQueue;
     private Gson gson;
 
@@ -74,7 +74,6 @@ public class ListActivity extends AppCompatActivity {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
-//        fetchPosts(1);
         //JSONParse --close--
 
         tvToolbar = (TextView) findViewById(R.id.tvToolbar);
@@ -88,6 +87,7 @@ public class ListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        fetchPosts(2);
 
         btnMenu = (ImageButton) findViewById(R.id.btnMenu);
         btnMenu.setOnClickListener(new View.OnClickListener() {
@@ -106,17 +106,17 @@ public class ListActivity extends AppCompatActivity {
                             case R.id.one:
                                 flag = 1;
                                 fetchPosts(flag);
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.two:
                                 flag = 2;
                                 fetchPosts(flag);
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.three:
-                                flag = 3;
-                                fetchPosts(flag);
-                                Toast.makeText(ListActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_LONG).show();
+                                tvToolbar.setText("Starred Movie");
+                                prepareListData();
+                                Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                                 return true;
                             default:
                                 return false;
@@ -140,10 +140,6 @@ public class ListActivity extends AppCompatActivity {
             tvToolbar.setText("Popular Movie");
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, POPULAR, null, onPostsLoaded, onPostsError);
             requestQueue.add(request);
-        }else{
-            tvToolbar.setText("Starred Movie");
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, STARRED, null, onPostsLoaded, onPostsError);
-            requestQueue.add(request);
         }
     }
 
@@ -154,7 +150,7 @@ public class ListActivity extends AppCompatActivity {
                 String results = response.getString("results");
                 Log.i("result : ", results);
                 List<Post.Results> posts = Arrays.asList(gson.fromJson(results, Post.Results[].class));
-
+                modelListMovie.removeAll(modelListMovie);
                 for (Post.Results post : posts) {
                     modelListMovie.add(new Post.Results(
                             post.getId(),
@@ -162,21 +158,6 @@ public class ListActivity extends AppCompatActivity {
                     ));
                 }
                 adapter.notifyDataSetChanged();
-
-                //JSONObject person = (JSONObject) results.get(i);
-//                Type resultsListType = new TypeToken<ArrayList<Post.Results>>(){}.getType();
-//                List<Post.Results> resultsList = gson.fromJson(results, resultsListType);
-//                Log.i("resultList : ", resultsList.toString());
-
-//                for (Post.Results post : posts) {
-//                    Log.i("PostActivity", post + ": " + post.getNama());
-//                    modelListPesanan.add(new ModelListPesanan(
-//                            //post.getId(),
-//                            post.getId(),
-//                    ));
-//                }
-//                adapter.notifyDataSetChanged();
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -189,6 +170,28 @@ public class ListActivity extends AppCompatActivity {
             Log.e("ListActivity", error.toString());
         }
     };
+
+    private void prepareListData() {
+        modelListMovie.removeAll(modelListMovie);
+        try{
+            DatabaseOperations DOP = new DatabaseOperations(mContext);
+            Cursor CR = DOP.read(DOP);
+            CR.moveToFirst();
+            String MOVIE_ID = "";
+            String POSTER_PATH = "";
+            do{
+                MOVIE_ID = CR.getString(1);
+                POSTER_PATH = CR.getString(2);
+                modelListMovie.add(new Post.Results(Integer.parseInt(MOVIE_ID), POSTER_PATH));
+                //List l = new List(Integer.parseInt(MOVIE_ID), POSTER_PATH);
+                //modelListMovie.add(l);
+                Collections.reverse(modelListMovie);
+            }while(CR.moveToNext());
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
 }
 
 

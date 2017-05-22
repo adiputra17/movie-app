@@ -13,6 +13,7 @@ public class Post{
     //private Map<String, String> results;
 
     public static class Results{
+        private Long ID;
         private String title;
         private int id;
         private String poster_path;
@@ -22,6 +23,12 @@ public class Post{
         private float vote_average;
 
         public Results(int id, String poster_path) {
+            this.id = id;
+            this.poster_path = poster_path;
+        }
+
+        public Results(Long ID, int id, String poster_path) {
+            this.ID = ID;
             this.id = id;
             this.poster_path = poster_path;
         }

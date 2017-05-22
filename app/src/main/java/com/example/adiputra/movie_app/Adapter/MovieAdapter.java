@@ -43,16 +43,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             cv = (CardView)itemView.findViewById(R.id.cv);
             tvId = (TextView) view.findViewById(R.id.id);
             imageView = (ImageView) view.findViewById(R.id.ivPoster);
-//            int position = getAdapterPosition();
-//            //if(position != RecyclerView.NO_POSITION) {
-//                final Post.Results mlv = (Post.Results) movieList.get(position);
-//                cv.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Toast.makeText(mContext, String.valueOf(mlv.getId()), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            //}
         }
     }
 
@@ -78,11 +68,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
                 .into(holder.imageView);
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, String.valueOf(mlv.getId()), Toast.LENGTH_SHORT).show();
+            public void onClick(View v){
+                //Toast.makeText(mContext, String.valueOf(mlv.getId()), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(v.getContext(), DetailActivity.class);
                 i.putExtra("id",String.valueOf(mlv.getId()));
-                //i.putExtra("id",String.valueOf(mlv.getId()));
+                i.putExtra("poster_path",mlv.getPoster_path());
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(i);
                 //ListActivity.finish();
