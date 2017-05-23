@@ -26,8 +26,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.adiputra.movie_app.Adapter.MovieAdapter;
+import com.example.adiputra.movie_app.Adapter.StarredAdapter;
 import com.example.adiputra.movie_app.Database.DatabaseOperations;
 import com.example.adiputra.movie_app.Model.Post;
+import com.example.adiputra.movie_app.Model.StarredMovie;
 import com.example.adiputra.movie_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,8 +55,10 @@ public class ListActivity extends AppCompatActivity {
     public static TextView tvToolbar;
     public int flag;
     private MovieAdapter adapter;
+    private StarredAdapter sAdapter;
     private RecyclerView recyclerView;
     private List<Post.Results> modelListMovie = new ArrayList<>();
+    private List<StarredMovie> modelStarredMovie = new ArrayList<>();
 
     //JSON Parse
     private static final String TOPRATE = "http://api.themoviedb.org/3/movie/top_rated?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
@@ -104,16 +108,34 @@ public class ListActivity extends AppCompatActivity {
                     public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.one:
+                                adapter = new MovieAdapter(getApplicationContext(), modelListMovie);
+                                recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(ListActivity.this, 3);
+                                recyclerView.setLayoutManager(mLayoutManager);
+                                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                                recyclerView.setAdapter(adapter);
                                 flag = 1;
                                 fetchPosts(flag);
                                 Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.two:
+                                adapter = new MovieAdapter(getApplicationContext(), modelListMovie);
+                                recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                                RecyclerView.LayoutManager mLayoutManager2 = new GridLayoutManager(ListActivity.this, 3);
+                                recyclerView.setLayoutManager(mLayoutManager2);
+                                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                                recyclerView.setAdapter(adapter);
                                 flag = 2;
                                 fetchPosts(flag);
                                 Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.three:
+                                sAdapter = new StarredAdapter(getApplicationContext(), modelStarredMovie);
+                                recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                                RecyclerView.LayoutManager mLayoutManager3 = new GridLayoutManager(ListActivity.this, 3);
+                                recyclerView.setLayoutManager(mLayoutManager3);
+                                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                                recyclerView.setAdapter(sAdapter);
                                 tvToolbar.setText("Starred Movie");
                                 prepareListData();
                                 Toast.makeText(ListActivity.this,item.getTitle(),Toast.LENGTH_SHORT).show();
@@ -172,20 +194,19 @@ public class ListActivity extends AppCompatActivity {
     };
 
     private void prepareListData() {
-        modelListMovie.removeAll(modelListMovie);
+        modelStarredMovie.removeAll(modelStarredMovie);
         try{
-            DatabaseOperations DOP = new DatabaseOperations(mContext);
+            DatabaseOperations DOP = new DatabaseOperations(getApplicationContext());
             Cursor CR = DOP.read(DOP);
             CR.moveToFirst();
             String MOVIE_ID = "";
             String POSTER_PATH = "";
             do{
-                MOVIE_ID = CR.getString(1);
-                POSTER_PATH = CR.getString(2);
-                modelListMovie.add(new Post.Results(Integer.parseInt(MOVIE_ID), POSTER_PATH));
-                //List l = new List(Integer.parseInt(MOVIE_ID), POSTER_PATH);
-                //modelListMovie.add(l);
-                Collections.reverse(modelListMovie);
+                MOVIE_ID = CR.getString(0);
+                POSTER_PATH = CR.getString(1);
+                StarredMovie sm = new StarredMovie(MOVIE_ID, POSTER_PATH);
+                modelStarredMovie.add(sm);
+                //Collections.reverse(modelStarredMovie);
             }while(CR.moveToNext());
         }catch(Exception e){
             System.out.println(e);

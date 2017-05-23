@@ -46,6 +46,8 @@ public class DetailActivity extends AppCompatActivity {
     private Button btnBudget, btnStarred;
     private ProgressBar progress;
 
+    boolean isClick = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ public class DetailActivity extends AppCompatActivity {
         tvId = (TextView) findViewById(R.id.tvId);
         ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
         btnStarred = (Button) findViewById(R.id.btnStarred);
+        btnStarred.setVisibility(View.GONE);
         ivPlayButton = (ImageView) findViewById(R.id.ivPlayButton);
         ivPlayButton.setVisibility(View.GONE);
         starRating = (ImageView) findViewById(R.id.starRating);
@@ -83,9 +86,16 @@ public class DetailActivity extends AppCompatActivity {
         btnStarred.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isClick){
+                    v.setBackgroundResource(R.drawable.ic_star_border_black_24dp);
+                    Toast.makeText(DetailActivity.this, "Movie Unstarred", Toast.LENGTH_SHORT).show();
+                }else{
+                    v.setBackgroundResource(R.drawable.ic_star_black_24dp);
+                    Toast.makeText(DetailActivity.this, "Movie Starred", Toast.LENGTH_SHORT).show();
+                }
+                isClick = !isClick; // reverse
                 DatabaseOperations DB = new DatabaseOperations(ctx);
                 DB.create(DB, id, poster_path);
-                Toast.makeText(DetailActivity.this, "Movie Starred : "+id+"-"+poster_path, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,6 +146,7 @@ public class DetailActivity extends AppCompatActivity {
                 ivPlayButton.setVisibility(View.VISIBLE);
                 btnBudget.setVisibility(View.VISIBLE);
                 starRating.setVisibility(View.VISIBLE);
+                btnStarred.setVisibility(View.VISIBLE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.adiputra.movie_app.Activity.DetailActivity;
 
 /**
  * Created by adiputra on 5/22/2017.
@@ -33,12 +36,20 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     public void create(DatabaseOperations dop, String movie_id, String poster_path){
-        SQLiteDatabase SQ = dop.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(TableData.TableInfo.MOVIE_ID, movie_id);
-        cv.put(TableData.TableInfo.POSTER_PATH, poster_path);
-        SQ.insert(TableData.TableInfo.TABLE_NAME, null, cv);
-        Log.d("Database Operations","1 row inserted - \n"+cv);
+        SQLiteDatabase db = dop.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM "+TableData.TableInfo.TABLE_NAME+" " +
+                "WHERE "+TableData.TableInfo.MOVIE_ID+"='"+movie_id+"'", null);
+        if(c.moveToFirst()) {
+            delete(movie_id);
+        }
+        else {
+            SQLiteDatabase SQ = dop.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(TableData.TableInfo.MOVIE_ID, movie_id);
+            cv.put(TableData.TableInfo.POSTER_PATH, poster_path);
+            long k = SQ.insert(TableData.TableInfo.TABLE_NAME, null, cv);
+            Log.d("Database Operations","1 row inserted - \n"+cv+"-"+k);
+        }
     }
 
     public Cursor read(DatabaseOperations dop){
@@ -59,6 +70,6 @@ public class DatabaseOperations extends SQLiteOpenHelper {
     }
 
     public void delete(String movie_id){
-        this.getWritableDatabase().delete(TableData.TableInfo.TABLE_NAME,"TableData.TableInfo._ID='"+TableData.TableInfo._ID+"'",null);
+        this.getWritableDatabase().delete(TableData.TableInfo.TABLE_NAME,""+TableData.TableInfo.MOVIE_ID+"='"+movie_id+"'",null);
     }
 }
