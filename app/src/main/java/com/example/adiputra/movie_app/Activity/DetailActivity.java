@@ -2,6 +2,7 @@ package com.example.adiputra.movie_app.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.adiputra.movie_app.Database.DatabaseOperations;
 import com.example.adiputra.movie_app.Model.Post;
+import com.example.adiputra.movie_app.Model.TraillerMovie;
 import com.example.adiputra.movie_app.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -108,10 +110,43 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void fetchPosts(String id) {
+        String TRAILLER = "http://api.themoviedb.org/3/movie/"+id+"/videos?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, TRAILLER, null, onPostsLoadedTrailler, onPostsErrorTrailler);
+        requestQueue.add(req);
         String URL = "http://api.themoviedb.org/3/movie/"+id+"?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null, onPostsLoaded, onPostsError);
         requestQueue.add(request);
     }
+
+    private final Response.Listener<JSONObject> onPostsLoadedTrailler = new Response.Listener<JSONObject>(){
+        @Override
+        public void onResponse(JSONObject response) {
+            try{
+                String results = response.getString("results");
+                List<TraillerMovie.Results> posts = Arrays.asList(gson.fromJson(results, TraillerMovie.Results[].class));
+                for (final TraillerMovie.Results post : posts) {
+                    ivBackdrop.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+post.getKey())));
+                            Log.i("Video", "Video Playing....");
+                        }
+                    });
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private final Response.ErrorListener onPostsErrorTrailler = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e("Trailler : ", error.toString());
+        }
+    };
+
+
     private final Response.Listener<JSONObject> onPostsLoaded = new Response.Listener<JSONObject>(){
         @Override
         public void onResponse(JSONObject response) {
