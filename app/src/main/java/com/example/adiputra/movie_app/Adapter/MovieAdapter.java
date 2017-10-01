@@ -61,7 +61,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Post.Results mlv = (Post.Results) movieList.get(position);
-        holder.tvId.setText(String.valueOf(mlv.getId()));
+        //holder.tvId.setText(String.valueOf(mlv.getId()));
         Glide.with(mContext.getApplicationContext())
                 .load("http://image.tmdb.org/t/p/w500"+mlv.getPoster_path())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

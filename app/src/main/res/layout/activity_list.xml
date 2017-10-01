@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blackSweet"
     tools:context="com.example.adiputra.movie_app.Activity.ListActivity">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
         android:id="@+id/toolbar"
-        android:background="@android:color/holo_blue_bright"
+
+        android:background="@color/blackSweet"
         >
 
         <RelativeLayout
@@ -35,7 +37,7 @@
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:theme="@style/styleButton"
+                android:theme="@style/blackSweet"
                 android:id="@+id/btnMenu"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_format_line_spacing_black_24dp"
@@ -56,6 +58,7 @@
         tools:showIn="@layout/activity_list">
 
         <android.support.v7.widget.RecyclerView
+            android:background="@color/blackSweet"
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

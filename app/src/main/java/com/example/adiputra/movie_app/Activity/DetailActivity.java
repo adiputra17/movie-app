@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     private Gson gson;
     //private String URL = "http://api.themoviedb.org/3/movie/"+id+"?&api_key=a6e05a69bd85f4eba7ec8e9db66cd4ef";
 
-    private TextView tvId, tvTitle, tvRuntime, tvRating, tvOverview;
+    private TextView tvId, tvTitle, tvRuntime, tvRating, tvOverview, tvRelease;
     private ImageView ivPlayButton, ivBackdrop, ivPosters, starRating;
     private Button btnBudget, btnStarred;
     private ProgressBar progress;
@@ -76,6 +76,7 @@ public class DetailActivity extends AppCompatActivity {
         btnBudget = (Button) findViewById(R.id.btnBudget);
         btnBudget.setVisibility(View.GONE);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
+        tvRelease = (TextView) findViewById(R.id.tvRelease);
 
 //        Bundle tvB = getIntent().getExtras();
 //        tvId.setText(tvB.getString("id"));
@@ -170,13 +171,14 @@ public class DetailActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(ivPosters);
                 String release_date = response.getString("release_date");
+                tvRelease.setText(release_date);
                 int revenue = response.getInt("revenue");
                 int runtime = response.getInt("runtime");
                 tvRuntime.setText("Duration : "+String.valueOf(runtime)+"'");
                 String title = response.getString("title");
                 tvTitle.setText(title);
                 double vote_average = response.getDouble("vote_average");
-                tvRating.setText(String.valueOf(vote_average));
+                tvRating.setText(String.valueOf(vote_average)+"/10");
                 progress.setVisibility(View.GONE);
                 ivPlayButton.setVisibility(View.VISIBLE);
                 btnBudget.setVisibility(View.VISIBLE);
